@@ -6,8 +6,13 @@
     <title>Force Bubble Charts</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
+      @font-face {
+        font-family: 'CamingoCode';
+        src: url('font/CamingoCode Regular.ttf');
+        src: local('font/CamingoCode Regular.ttf');
+      }
       body {
-        background-color: black;
+        background-color: "242424";
         padding-left: 50px;
       }
       circle {
@@ -18,10 +23,12 @@
       .label {
         fill: white;
         font-size: 14px;
+        font-family: 'CamingoCode';
       }
+
     </style>
   </head>
-  <body>
+  <body style="background-color: #242424;">
     <div class="btn-group" data-toggle="buttons">
       <label class="btn btn-primary active" id="Country">
         <input type="radio" name="options"> Country
@@ -51,7 +58,7 @@ var yeardata = [];
       d3.csv('data/FAOSTAT_apples.csv', function (error, data) {
 
         var width = 1000, height = 1000;
-        var fill = d3.scale.ordinal().range(['cyan','magenta','yellow','#72856a','#2a3285','#383435'])
+        var fill = d3.scale.ordinal().range(['#F8C21C'])
         var svg = d3.select("#chart").append("svg")
             .attr("width", width)
             .attr("height", height)
