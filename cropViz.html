@@ -42,7 +42,7 @@
     <script src="lib/bootstrap.js"></script>
     <script src="lib/underscore.js"></script>
     <script>
-      d3.csv('data/FAOSTAT_threeCountries.csv', function (error, data) {
+      d3.csv('data/FAOSTAT_meats.csv', function (error, data) {
 
         var width = 1000, height = 1000;
         var fill = d3.scale.ordinal().range(['cyan','magenta','yellow','#72856a','#2a3285','#383435'])
@@ -50,8 +50,11 @@
             .attr("width", width)
             .attr("height", height);
 
+        var max_amount = d3.max(data, function (d) { return parseInt(d.Value)})
+        var radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
+
         for (var j = 0; j < data.length; j++) {
-          data[j].radius = +data[j].Value / 4000;
+          data[j].radius = radius_scale(+data[j].Value)*.8;
           data[j].x = Math.random() * width;
           data[j].y = Math.random() * height;
         }

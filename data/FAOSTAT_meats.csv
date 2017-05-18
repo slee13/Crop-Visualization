@@ -1,0 +1,15 @@
+Domain Code,Domain,Country Code,Country,Element Code,Element,Item Code,Item,Year Code,Year,Unit,Value,Flag,Flag Description
+QV,Value of Agricultural Production,3,Albania,154,Net Production Value (constant 2004-2006 1000 I$),1094,"Meat indigenous, chicken",2013,2013,1000 Int. $,22489.081412,*,Unofficial figure
+QV,Value of Agricultural Production,3,Albania,154,Net Production Value (constant 2004-2006 1000 I$),1032,"Meat indigenous, goat",2013,2013,1000 Int. $,18667.327378,*,Unofficial figure
+QV,Value of Agricultural Production,3,Albania,154,Net Production Value (constant 2004-2006 1000 I$),1055,"Meat indigenous, pig",2013,2013,1000 Int. $,11647.859526,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1094,"Meat indigenous, chicken",2013,2013,1000 Int. $,153184.284242,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1070,"Meat indigenous, duck",2013,2013,1000 Int. $,240.168661,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1077,"Meat indigenous, geese",2013,2013,1000 Int. $,327.371669,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1032,"Meat indigenous, goat",2013,2013,1000 Int. $,1752.295096,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1055,"Meat indigenous, pig",2013,2013,1000 Int. $,737766.76586,*,Unofficial figure
+QV,Value of Agricultural Production,11,Austria,154,Net Production Value (constant 2004-2006 1000 I$),1087,"Meat indigenous, turkey",2013,2013,1000 Int. $,161698.252707,*,Unofficial figure
+QV,Value of Agricultural Production,255,Belgium,154,Net Production Value (constant 2004-2006 1000 I$),1094,"Meat indigenous, chicken",2013,2013,1000 Int. $,515899.429029,*,Unofficial figure
+QV,Value of Agricultural Production,255,Belgium,154,Net Production Value (constant 2004-2006 1000 I$),1070,"Meat indigenous, duck",2013,2013,1000 Int. $,235.535376,*,Unofficial figure
+QV,Value of Agricultural Production,255,Belgium,154,Net Production Value (constant 2004-2006 1000 I$),1032,"Meat indigenous, goat",2013,2013,1000 Int. $,2.396088,*,Unofficial figure
+QV,Value of Agricultural Production,255,Belgium,154,Net Production Value (constant 2004-2006 1000 I$),1055,"Meat indigenous, pig",2013,2013,1000 Int. $,1654372.615236,*,Unofficial figure
+QV,Value of Agricultural Production,255,Belgium,154,Net Production Value (constant 2004-2006 1000 I$),1087,"Meat indigenous, turkey",2013,2013,1000 Int. $,6094.37231,*,Unofficial figure
