@@ -6,26 +6,20 @@
     <title>Force Bubble Charts</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
-      @font-face {
-        font-family: 'CamingoCode';
-        src: url('font/CamingoCode Regular.ttf');
-        src: local('font/CamingoCode Regular.ttf');
-      }
       body {
-        background-color: "242424";
+        background-color: "#242424";
         padding-left: 50px;
       }
       circle {
       }
       .btn-group {
-        margin: 0 auto;
+        margin-top: 20px;
+        margin-left: 330px;
       }
       .label {
         fill: white;
         font-size: 14px;
-        font-family: 'CamingoCode';
       }
-
     </style>
   </head>
   <body style="background-color: #242424;">
@@ -33,129 +27,87 @@
       <label class="btn btn-primary active" id="Country">
         <input type="radio" name="options"> Country
       </label>
-      <label class="btn btn-primary" id="Year">
-        <input type="radio" name="options"> Year
+      <label class="btn btn-primary" id="Value">
+        <input type="radio" name="options"> Value
       </label>
       <label class="btn btn-primary" id="Item">
         <input type="radio" name="options"> Item
       </label>
     </div>
-
-    <div id ="year-slider">
-    </div>
-
     <div id="chart"></div>
-
     <script src="lib/d3.js"></script>
     <script src="lib/jquery.js"></script>
     <script src="lib/bootstrap.js"></script>
     <script src="lib/underscore.js"></script>
     <script>
-    //SVG filter for the gooey effect
-    //Code based on http://tympanus.net/codrops/2015/03/10/creative-gooey-effects/
 
-var yeardata = [];
-      d3.csv('data/FAOSTAT_apples.csv', function (error, data) {
-
+      d3.csv('data/FAOSTAT_meats.csv', function (error, data) {
         var width = 1000, height = 1000;
-        var fill = d3.scale.ordinal().range(['#F8C21C'])
+        var fill = d3.scale.ordinal().range(['F8C21C','magenta','yellow','#72856a','#2a3285','#383435'])
         var svg = d3.select("#chart").append("svg")
             .attr("width", width)
             .attr("height", height)
 
         var max_amount = d3.max(data, function (d) { return parseInt(d.Value)})
         var radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
-
-
         for (var j = 0; j < data.length; j++) {
           data[j].radius = radius_scale(+data[j].Value)*.8;
           data[j].x = Math.random() * width;
           data[j].y = Math.random() * height;
-          if (data[j].Year == '2010') {
-            yeardata.push(data[j]);
-          }
         }
-
-        console.log(yeardata);
-        console.log(yeardata[1]);
-
-
         var padding = 4;
-        var maxRadius = d3.max(_.pluck(yeardata, 'radius'));
-
-
+        var maxRadius = d3.max(_.pluck(data, 'radius'));
         var getCenters = function (vname, size) {
           var centers, map;
-          centers = _.uniq(_.pluck(yeardata, vname)).map(function (d) {
+          centers = _.uniq(_.pluck(data, vname)).map(function (d) {
             return {name: d, value: 1};
           });
-
           map = d3.layout.pack().size(size);
           map.nodes({children: centers});
-
           return centers;
         };
-
-          var nodes = svg.selectAll("circle")
-            .data(yeardata);
-
-
+        var nodes = svg.selectAll("circle")
+          .data(data);
         nodes.enter().append("circle")
           .attr("class", "node")
+          .attr("id", function(d) { return d.Country; })
           .attr("cx", function (d) { return d.x; })
           .attr("cy", function (d) { return d.y; })
           .attr("r", 2)
           .style("fill", function (d) { return fill(d.Country); })
           .on("mouseover", function (d) { showPopover.call(this, d); })
           .on("mouseout", function (d) { removePopovers(); })
-
         nodes.transition().duration(1000)
           .attr("r", function (d) { return d.radius; })
-
         var force = d3.layout.force();
 
         draw('Country');
-
         $( ".btn" ).click(function() {
           draw(this.id);
         });
-        //
-        // $(function() {
-        //     $( "#year-slider" ).slider({
-        //         min: 1960,
-        //         max: 2013,
-        //         value: 2010,
-        //         slide: function( event, ui ) {
-        //           var val = ui.value;
-        //           console.log("Year:", val);
-        //
-        //           update(val);
-        //         }
-        //     });
-        // });
 
-        // function update(val) {
-        //   var centers = getCenters(varname, [800, 800]);
-        //   force.on("tick", tick(centers, Years));
-        //   labels(centers)
-        //   force.start();
-        // }
+        $( ".node").click(function() {
+          expand(this.id);
+        });
+
+        function expand(varname) {
+
+        }
 
         function draw (varname) {
           var centers = getCenters(varname, [800, 800]);
           force.on("tick", tick(centers, varname));
-          labels(centers);
+          labels(centers)
           force.start();
         }
-
         function tick (centers, varname) {
           var foci = {};
           for (var i = 0; i < centers.length; i++) {
             foci[centers[i].name] = centers[i];
           }
           return function (e) {
-            for (var i = 0; i < yeardata.length; i++) {
-              var o = yeardata[i];
+            for (var i = 0; i < data.length; i++) {
+              var o = data[i];
               var f = foci[o[varname]];
               o.y += (f.y - o.y) * e.alpha;
               o.x += (f.x - o.x) * e.alpha;
@@ -165,28 +117,21 @@ var yeardata = [];
               .attr("cy", function (d) { return d.y; });
           }
         }
-
         function labels (centers) {
           svg.selectAll(".label").remove();
-          console.log(centers);
           svg.selectAll(".label")
           .data(centers).enter().append("text")
           .attr("class", "label")
           .text(function (d) { return d.name })
           .attr("transform", function (d) {
-            return "translate(" + (d.x - ((d.name.length)*3)) + ", " + (d.y - d.r+100) + ")";
-            console.log(d.y);
-            console.log(d.r);
+            return "translate(" + (d.x - ((d.name.length)*3)) + ", " + (d.y - d.r) + ")";
           });
-
         }
-
         function removePopovers () {
           $('.popover').each(function() {
             $(this).remove();
           });
         }
-
         function showPopover (d) {
           $(this).popover({
             placement: 'auto top',
@@ -194,11 +139,10 @@ var yeardata = [];
             trigger: 'manual',
             html : true,
             content: function() {
-              return "Country: " + d.Country + "<br/>Year: " + d.Year + "<br/>Item: " + d.Item + "<br/>Price Value: " + d.Value; }
+              return "Country: " + d.Country + "<br/>Item: " + d.Item + "<br/>Price Value: $" + d.Value; }
           });
           $(this).popover('show')
         }
-
         function collide(alpha) {
           var quadtree = d3.geom.quadtree(data);
           return function(d) {
@@ -224,7 +168,7 @@ var yeardata = [];
               return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
             });
           };
-        };
+        }
       });
     </script>
   </body>
