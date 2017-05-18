@@ -26,8 +26,8 @@
       <label class="btn btn-primary active" id="Country">
         <input type="radio" name="options"> Country
       </label>
-      <label class="btn btn-primary" id="Value">
-        <input type="radio" name="options"> Value
+      <label class="btn btn-primary" id="Year">
+        <input type="radio" name="options"> Year
       </label>
       <label class="btn btn-primary" id="Item">
         <input type="radio" name="options"> Item
@@ -47,7 +47,7 @@
     //SVG filter for the gooey effect
     //Code based on http://tympanus.net/codrops/2015/03/10/creative-gooey-effects/
 
-
+var yeardata = [];
       d3.csv('data/FAOSTAT_apples.csv', function (error, data) {
 
         var width = 1000, height = 1000;
@@ -59,7 +59,7 @@
         var max_amount = d3.max(data, function (d) { return parseInt(d.Value)})
         var radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
 
-        var yeardata = [];
+
         for (var j = 0; j < data.length; j++) {
           data[j].radius = radius_scale(+data[j].Value)*.8;
           data[j].x = Math.random() * width;
@@ -72,13 +72,14 @@
         console.log(yeardata);
         console.log(yeardata[1]);
 
+
         var padding = 4;
-        var maxRadius = d3.max(_.pluck(data, 'radius'));
+        var maxRadius = d3.max(_.pluck(yeardata, 'radius'));
 
 
         var getCenters = function (vname, size) {
           var centers, map;
-          centers = _.uniq(_.pluck(data, vname)).map(function (d) {
+          centers = _.uniq(_.pluck(yeardata, vname)).map(function (d) {
             return {name: d, value: 1};
           });
 
@@ -136,7 +137,7 @@
         function draw (varname) {
           var centers = getCenters(varname, [800, 800]);
           force.on("tick", tick(centers, varname));
-          labels(centers)
+          labels(centers);
           force.start();
         }
 
@@ -146,8 +147,8 @@
             foci[centers[i].name] = centers[i];
           }
           return function (e) {
-            for (var i = 0; i < data.length; i++) {
-              var o = data[i];
+            for (var i = 0; i < yeardata.length; i++) {
+              var o = yeardata[i];
               var f = foci[o[varname]];
               o.y += (f.y - o.y) * e.alpha;
               o.x += (f.x - o.x) * e.alpha;
@@ -160,14 +161,17 @@
 
         function labels (centers) {
           svg.selectAll(".label").remove();
-
+          console.log(centers);
           svg.selectAll(".label")
           .data(centers).enter().append("text")
           .attr("class", "label")
           .text(function (d) { return d.name })
           .attr("transform", function (d) {
-            return "translate(" + (d.x - ((d.name.length)*3)) + ", " + (d.y - d.r) + ")";
+            return "translate(" + (d.x - ((d.name.length)*3)) + ", " + (d.y - d.r+100) + ")";
+            console.log(d.y);
+            console.log(d.r);
           });
+
         }
 
         function removePopovers () {
@@ -213,7 +217,7 @@
               return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
             });
           };
-        }
+        };
       });
     </script>
   </body>
