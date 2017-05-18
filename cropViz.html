@@ -13,7 +13,7 @@
       circle {
       }
       .btn-group {
-        margin-left: 330px;
+        margin: 0 auto;
       }
       .label {
         fill: white;
@@ -33,7 +33,12 @@
         <input type="radio" name="options"> Item
       </label>
     </div>
+
+    <div id ="year-slider">
+    </div>
+
     <div id="chart"></div>
+
     <script src="lib/d3.js"></script>
     <script src="lib/jquery.js"></script>
     <script src="lib/bootstrap.js"></script>
@@ -43,23 +48,29 @@
     //Code based on http://tympanus.net/codrops/2015/03/10/creative-gooey-effects/
 
 
-      d3.csv('data/FAOSTAT_meats.csv', function (error, data) {
+      d3.csv('data/FAOSTAT_apples.csv', function (error, data) {
 
         var width = 1000, height = 1000;
         var fill = d3.scale.ordinal().range(['cyan','magenta','yellow','#72856a','#2a3285','#383435'])
         var svg = d3.select("#chart").append("svg")
             .attr("width", width)
             .attr("height", height)
-            .style("filter", "url(#gooeyCodeFilter)");
 
         var max_amount = d3.max(data, function (d) { return parseInt(d.Value)})
         var radius_scale = d3.scale.pow().exponent(0.5).domain([0, max_amount]).range([2, 85])
 
+        var yeardata = [];
         for (var j = 0; j < data.length; j++) {
           data[j].radius = radius_scale(+data[j].Value)*.8;
           data[j].x = Math.random() * width;
           data[j].y = Math.random() * height;
+          if (data[j].Year == '2010') {
+            yeardata.push(data[j]);
+          }
         }
+
+        console.log(yeardata);
+        console.log(yeardata[1]);
 
         var padding = 4;
         var maxRadius = d3.max(_.pluck(data, 'radius'));
@@ -77,8 +88,9 @@
           return centers;
         };
 
-        var nodes = svg.selectAll("circle")
-          .data(data);
+          var nodes = svg.selectAll("circle")
+            .data(yeardata);
+
 
         nodes.enter().append("circle")
           .attr("class", "node")
@@ -94,45 +106,32 @@
 
         var force = d3.layout.force();
 
-        var filter = svg.append("defs")
-        .append("filter")
-        .attr("id","gooeyCodeFilter"); //use a unique id to reference again later on
-
-        //Append multiple "pieces" to the filter
-        filter.append("feGaussianBlur")
-        .attr("in","SourceGraphic")
-        .attr("stdDeviation","10")
-        //to fix safari:
-        //http://stackoverflow.com/questions/24295043/svg-gaussian-blur-in-safari-unexpectedly-lightens-image
-        .attr("color-interpolation-filters","sRGB")
-        .attr("result","blur");
-        filter.append("feColorMatrix")
-        .attr("class","blurValues") //used later to transition the gooey effect
-        .attr("in","blur")
-        .attr("mode","matrix")
-        .attr("values","1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9")
-        .attr("result","gooey");
-        //If you want the end shapes to be exactly the same size as without the filter
-        //add the feBlend below. However this will result in a less beautiful gooey effect
-        filter.append("feBlend")
-        .attr("in","SourceGraphic")
-        .attr("in2","gooey");
-        //Instead of the feBlend, you can do feComposite. This will also place a sharp image on top
-        //But it will result in smaller circles
-        // filter.append("feComposite") //feBlend
-        //   .attr("in","SourceGraphic")
-        //   .attr("in2","gooey")
-        //   .attr("operator","atop");
-
-        //Apply the filter to the group element of all the circles
-        var circleWrapper = svg.append("g")
-        .style("filter", "url(#gooeyCodeFilter)");
-
         draw('Country');
 
         $( ".btn" ).click(function() {
           draw(this.id);
         });
+        //
+        // $(function() {
+        //     $( "#year-slider" ).slider({
+        //         min: 1960,
+        //         max: 2013,
+        //         value: 2010,
+        //         slide: function( event, ui ) {
+        //           var val = ui.value;
+        //           console.log("Year:", val);
+        //
+        //           update(val);
+        //         }
+        //     });
+        // });
+
+        // function update(val) {
+        //   var centers = getCenters(varname, [800, 800]);
+        //   force.on("tick", tick(centers, Years));
+        //   labels(centers)
+        //   force.start();
+        // }
 
         function draw (varname) {
           var centers = getCenters(varname, [800, 800]);
@@ -184,7 +183,7 @@
             trigger: 'manual',
             html : true,
             content: function() {
-              return "Country: " + d.Country + "<br/>Item: " + d.Item + "<br/>Price Value: " + d.Value; }
+              return "Country: " + d.Country + "<br/>Year: " + d.Year + "<br/>Item: " + d.Item + "<br/>Price Value: " + d.Value; }
           });
           $(this).popover('show')
         }
